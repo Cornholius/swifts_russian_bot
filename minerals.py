@@ -40,7 +40,3 @@ def all_items():
 
 if __name__ == "__main__":
     all_items()
-    print(all_items()[0])
-    qwe = all_items()[0]
-    print(qwe['Isogen'])
-
