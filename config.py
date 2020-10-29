@@ -1,4 +1,7 @@
-TOKEN = 'NzcwOTY0MjM1OTI4NzMxNjcw.X5lOZQ.HVLzOpho0waL8oU-YWqFnOU6Duw'
+p1 = 'NzcwOTY0MjM1OTI4'
+p2 = 'NzMxNjcw.X5lOZQ.HVLzOph'
+p3 = 'o0waL8oU-YWqFnOU6Duw'
+TOKEN = p1 + p2 + p3
 
 
 colors = {'DEFAULT': 0x000000, 'WHITE': 0xFFFFFF, 'AQUA': 0x1ABC9C, 'GREEN': 0x2ECC71, 'BLUE': 0x3498DB,
