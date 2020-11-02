@@ -5,7 +5,10 @@ from bot_token import TOKEN
 bot = commands.Bot(command_prefix='!')
 client = discord.Client()
 
-cogs = ['plugins.info', 'plugins.minerals', 'plugins.requests']
+cogs = ['plugins.info',
+        'plugins.minerals',
+        'plugins.requests',
+        'plugins.test']
 for cog in cogs:
     bot.load_extension(cog)
     print('Loading ', cog)
