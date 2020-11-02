@@ -11,7 +11,6 @@ all_id = {'Tritanium': '34',
           'Megacyte': '40',
           'Morphite': '11399'}
 
-
 def all_items():
     buy_prices_list = {}
     sell_prices_list = {}
@@ -40,3 +39,4 @@ def all_items():
 
 if __name__ == "__main__":
     all_items()
+    print('minerals.py')
