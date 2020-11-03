@@ -14,7 +14,7 @@ class Requests(commands.Cog):
         cursor.close()
 
     @commands.command(name='заказ')
-    async def take_job(self, ctx, arg1, arg2):
+    async def take_job(self, ctx, arg1=None, arg2=None):
         try:
             client_id = ctx.message.author.id
             name = ctx.message.author.name
@@ -45,23 +45,22 @@ class Requests(commands.Cog):
             await ctx.message.delete()
             await ctx.send(
                 "ты в глаза долбишься?! сказал же напиши название нужного тебе говна + кол-во цифрами\n"
-                "(например: сакра 1, или хугин 3)\n"
+                "например: сакра 1, или хугин 3\n"
                 "Если тебе присралось в несколько слов, то используй кавычки!\n"
-                "'дилдак мне в жопу' 10\n"
-                "Давай заного и не огорчай меня, кожаный мешок")
+                "например: 'дилдак мне в жопу' 10\n"
+                "Давай заного и не огорчай меня, кожаный мешок", delete_after=60)
 
     @commands.command(name='взятьзаказ')
-    async def builder_take_job(self, ctx, arg):
-        builder_id = ctx.message.author.id
-        name = ctx.message.author.name
-        conn = sqlite3.connect("data.db")
-        cursor = conn.cursor()
+    async def builder_take_job(self, ctx, arg=None):
         try:
+            builder_id = ctx.message.author.id
+            name = ctx.message.author.name
+            conn = sqlite3.connect("data.db")
+            cursor = conn.cursor()
             cursor.execute(
                 "UPDATE requests "
                 "SET builder = '{}', builder_id = '{}' "
-                "WHERE id = {}"
-                    .format(name, builder_id, int(arg))
+                "WHERE id = {}".format(name, builder_id, int(arg))
             )
             conn.commit()
             cursor.execute("SELECT * FROM requests WHERE id={}".format(arg))
@@ -81,44 +80,65 @@ class Requests(commands.Cog):
             await msg.edit(embed=embed)
         except Exception:
             await ctx.message.delete()
-            await ctx.send('#заглушка')
+            await ctx.send("ну и хуле тут было сложного?! ты не умеешь в буквы и цифры? "
+                           "Что, написать !взятьзаказ <№> это пиздец какая невыполнимая миссия? "
+                           "давай биомасса, вставь руки в плечи и попробуй ещё раз!", delete_after=60)
 
     @commands.command(name='снятьзаказ')
-    async def builder_delete_job(self, ctx, arg):
-        builder_id = ctx.message.author.id
-        print('builder_id', type(builder_id))
-        conn = sqlite3.connect("data.db")
-        cursor = conn.cursor()
-        cursor.execute('''SELECT * FROM requests WHERE id={}'''.format(arg))
-        request = cursor.fetchone()
-        print('request id', type(request[4]))
-        print(request)
-        if request[6] is not None:
-            if builder_id == request[4] or request[6]:
-                cursor.execute("""UPDATE requests SET builder = '{}', builder_id = '{}' WHERE id = {}"""
-                               .format(None, None, int(arg)))
-                conn.commit()
-                embed = discord.Embed(color=random.choice(self.color_list))
-                embed.add_field(name='Заказ №{}'.format(request[0]),
-                                value='Заказчик: {}\n Заказ: {} {}шт.'.format(request[3], request[1], request[2]))
-                embed.set_thumbnail(url=ctx.author.avatar_url)
-        cursor.close()
+    async def builder_delete_job(self, ctx, arg=None):
+        author_id = ctx.message.author.id
+        try:
+            conn = sqlite3.connect("data.db")
+            cursor = conn.cursor()
+            cursor.execute('''SELECT * FROM requests WHERE id={}'''.format(int(arg)))
+            request = cursor.fetchone()
+            if request[6] is not None:
+                if author_id == request[4] or request[6]:
+                    cursor.execute("""
+                    UPDATE requests 
+                    SET builder = '{}', builder_id = '{}' 
+                    WHERE id = {}""".format(None, None, int(arg))
+                                   )
+                    conn.commit()
+                    embed = discord.Embed(color=random.choice(self.color_list))
+                    embed.add_field(name='Заказ №{}'.format(request[0]),
+                                    value='Заказчик: {}\n Заказ: {} {}шт.'.format(request[3], request[1], request[2]))
+                    embed.set_thumbnail(url=ctx.author.avatar_url)
+                    msg = await ctx.fetch_message(request[7])
+                    await ctx.message.delete()
+                    await msg.edit(embed=embed)
+            cursor.close()
+            await ctx.message.delete()
+        except Exception:
+            await ctx.message.delete()
+            await ctx.send("Жми буквы правильно, кожаный мешок с удобрениями! "
+                           "давай! набери простое сочетание букв, пробел, цифры! "
+                           "даже айсем умнее и полезнее тебя, жалкая органика!", delete_after=60)
+
 
     @commands.command(name='удалитьзаказ')
-    async def detete_job(self, ctx, arg):
-        mens_id = ctx.message.author.id
-        conn = sqlite3.connect("data.db")
-        cursor = conn.cursor()
-        cursor.execute('''SELECT * FROM requests WHERE id={}'''.format(arg))
-        request = cursor.fetchone()
-        msg_id = request[7]
-        if str(mens_id) == request[4] or request[6]:
-            msg = await ctx.fetch_message(int(msg_id))
-            cursor.execute('''DELETE FROM requests WHERE id = ?''', (arg,))
-            conn.commit()
-            await msg.delete()
-        conn.close()
-        await ctx.message.delete()
+    async def detete_job(self, ctx, arg=None):
+        try:
+            mens_id = ctx.message.author.id
+            conn = sqlite3.connect("data.db")
+            cursor = conn.cursor()
+            cursor.execute('''SELECT * FROM requests WHERE id={}'''.format(arg))
+            request = cursor.fetchone()
+            msg_id = request[7]
+            if int(mens_id) == int(request[4]) or int(request[6]):
+                msg = await ctx.fetch_message(int(msg_id))
+                cursor.execute('''DELETE FROM requests WHERE id = ?''', (arg,))
+                conn.commit()
+                await msg.delete()
+            conn.close()
+            await ctx.message.delete()
+            await ctx.send("Я надеюсь ты удалил заказ потому что он выполнен, "
+                           "а не потому что вы, кожаные неудачники, снова обосрались!", delete_after=60)
+        except Exception:
+            await ctx.message.delete()
+            await ctx.send("Соберись тряпка! надо всего то поставить восклицательный знак, "
+                           "нажать 12 кнопочек с буквами, ебануть пробел, и цифры заказа."
+                           "даже обезьяна с этим справится! поэтому я в тебя верю, белковый", delete_after=60)
 
 
 def setup(bot):
