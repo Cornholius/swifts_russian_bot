@@ -30,7 +30,6 @@ class Requests(commands.Cog):
                 value='Заказчик: {}\n Заказ: {} {}шт.'.format(name, arg1, arg2)
             )
             embed.set_thumbnail(url=ctx.author.avatar_url)
-            await ctx.message.delete()
             await ctx.send(embed=embed)
             messages = await ctx.channel.history(limit=5).flatten()
             msg_id = []

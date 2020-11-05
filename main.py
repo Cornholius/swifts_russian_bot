@@ -7,8 +7,8 @@ client = discord.Client()
 
 cogs = ['plugins.info',
         'plugins.minerals',
-        'plugins.requests',
-        'plugins.test']
+        'plugins.requests'
+        ]
 for cog in cogs:
     bot.load_extension(cog)
     print('Loading ', cog)

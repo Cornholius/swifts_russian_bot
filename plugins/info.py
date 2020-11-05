@@ -1,8 +1,8 @@
-import discord
 import random
-from discord.ext import commands
 import sqlite3
-from discord import TextChannel
+
+import discord
+from discord.ext import commands
 
 client = discord.Client()
 
