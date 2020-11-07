@@ -2,13 +2,13 @@ import discord
 from discord.ext import commands
 from bot_token import TOKEN
 
+# <RawReactionActionEvent message_id=774201412581982219 user_id=285056432808919040 channel_id=486609181424746499 guild_id=486609181424746497 emoji=<PartialEmoji animated=False name='pidori' id=712304327808778290> event_type='REACTION_ADD' member=<Member id=285056432808919040 name='Corn' discriminator='2313' bot=False nick=None guild=<Guild id=486609181424746497 name='Хижина краболова' shard_id=None chunked=False member_count=7>>>
+
 bot = commands.Bot(command_prefix='!')
-client = discord.Client()
 
 cogs = ['plugins.info',
         'plugins.minerals',
-        'plugins.requests',
-        'plugins.test'
+        'plugins.requests'
         ]
 for cog in cogs:
     bot.load_extension(cog)
@@ -20,7 +20,8 @@ async def on_ready():
     print('Bot started')
 
 bot.run(TOKEN)
-# client.run(TOKEN)
+
+
 # import discord
 # from discord import utils
 #
@@ -29,7 +30,7 @@ bot.run(TOKEN)
 #         print('Logged on as {0}!'.format(self.user))
 #
 #     async def on_raw_reaction_add(self, payload):
-#         print(payload.message_id)
+#         print(payload)
 #         if payload.message_id == 774201412581982219:
 #             print(payload.message_id)
 #             channel = self.get_channel(payload.channel_id)  # получаем объект канала
