@@ -28,7 +28,3 @@ class Minerals(commands.Cog):
 
 def setup(bot):
     bot.add_cog(Minerals(bot))
-
-
-if __name__ == "__main__":
-    all_items()
