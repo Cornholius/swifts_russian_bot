@@ -6,7 +6,8 @@ bot = commands.Bot(command_prefix='!')
 
 cogs = ['plugins.info',
         'plugins.minerals',
-        'plugins.requests'
+        'plugins.requests',
+        'plugins.avatar'
         ]
 for cog in cogs:
     bot.load_extension(cog)
